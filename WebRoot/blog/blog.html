@@ -1,0 +1,90 @@
+<html>
+<script src="http://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#id_create").click(function(){
+	  var s_name=$("#queue_name").val();
+	  $.ajax({
+		  url: "${ctx}/blog/creating",
+		  data: {
+			  queue_name: s_name
+		  },
+		  beforeSend: function(result) {    $('#id_create').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#id_create').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  
+  $("#id_list").click(function(){
+	  $.ajax({
+		  url: "${ctx}/blog/list",
+		  data: {
+		    zipcode: 97201
+		  },
+		  beforeSend: function(result) {    $('#id_list').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#id_list').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  $("#id_send").click(function(){
+	  window.open("${ctx}/blog/addsend");
+  });
+  $("#addReceive").click(function(){
+	  window.open("${ctx}/blog/addReceive");
+  });
+  
+  
+  
+  $("#delReceive").click(function(){
+	  var s_name=$("#queue_name").val();
+	  
+	  $.ajax({
+		  url: "${ctx}/blog/delReceive",
+		  data: {
+			  queue_name: s_name
+		  },
+		  beforeSend: function(result) {    $('#delReceive').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#delReceive').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  
+});
+</script>
+<body>
+队列名称：  <input type="text" name="queue_name" id="queue_name"  /><br/><br/><br/>
+
+<input type="button" value="创建队列" id="id_create"><br><br>
+
+<input type="button" value="显示队列" id="id_list"><br><br>
+
+<input type="button" value="发送消息" id="id_send"><br><br>
+
+<input type="button" value="接受消息" id="addReceive"><br><br>
+
+ 
+
+<input type="button" value="删除队列" id="delReceive"><br><br>
+
+<div id="c"></div>
+
+</body>
+</html>

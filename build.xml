@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="demo" default="start_tomcat">
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+	<!--to define the jar for build-->
+
+	<path id="dependency.path">
+		<fileset dir="./WebRoot/WEB-INF/lib" includes="*.jar" />
+	</path>
+
+	<path id="JAVA.rt">
+		<pathelement location="${frameone.runtime}/common/rt.jar" />
+	</path>
+
+	<path id="Project.classpath">
+		<path refid="JAVA.rt" />
+	</path>
+	<property name="tomcat.home" value="C:\ci\apache-tomcat-7.0.69" />
+	<property name="log.file" value="C:\ci\log\log.txt" />
+	<!--  注册服务命令 service.bat  install tomcat7 -->
+	<target name="stop_tomcat">
+		<echo>停止tomcat服务(需要提前注册tomcat服务)</echo>
+		<exec executable="cmd.exe" failonerror="false">
+			<arg line="/c net stop Tomcat7 " />
+		</exec>
+
+	</target>
+
+	<!--  删除tomcat站点虚拟目录下的所有文件-->
+	<target name="init" depends="stop_tomcat">
+
+
+
+		<mkdir dir="./WebRoot/WEB-INF/classes" />
+		<delete verbose="true" includeemptydirs="true">
+			<fileset dir="C:/ci/web/">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+
+
+
+
+	</target>
+
+	<!--2. 编译-->
+	<target name="compile" depends="init">
+		<javac srcdir="./src" classpathref="dependency.path" destdir="./WebRoot/WEB-INF/classes" fork="true" memorymaximumsize="500M" nowarn="true" encoding="utf8" includeantruntime="false">
+			<compilerarg line="-XDignore.symbol.file" />
+			<classpath refid="Project.classpath" />
+		</javac>
+		<!--*.xml and so on -->
+		<copy todir="./WebRoot/WEB-INF/classes">
+			<fileset dir="./src">
+				<exclude name="**/.svn" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="./WebRoot/WEB-INF/classes">
+			<fileset dir="./res">
+			</fileset>
+		</copy>
+	</target>
+
+	<!--4. 把编译后的文件夹拷贝到tomcat站点虚拟目录下-->
+	<target name="scp" depends="compile">
+		<copy todir="C:/ci/web/">
+			<fileset dir="./WebRoot">
+			</fileset>
+		</copy>
+
+	</target>
+	<target name="start_tomcat" depends="scp">
+		<copy overwrite="true" tofile="C:/ci/web/WEB-INF/classes/a_little_config.txt" file="C:/ci/a_little_config.txt" />
+
+		<echo>启动tomcat服务(需要提前注册tomcat服务)</echo>
+		<exec executable="cmd.exe" failonerror="false">
+			<arg line="/c net start Tomcat7 " />
+		</exec>
+
+	</target>
+
+</project>

@@ -1,0 +1,68 @@
+<html>
+<script src="http://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#id_create").click(function(){
+	  var s_name=$("#name").val();
+	  $.ajax({
+		  url: "${ctx}/aws/add",
+		  data: {
+			  name: s_name
+		  },
+		  beforeSend: function(result) {    $('#id_create').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#id_create').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  
+  $("#id_list").click(function(){
+	  $.ajax({
+		  url: "${ctx}/aws/list",
+		  data: {
+		    zipcode: 97201
+		  },
+		  beforeSend: function(result) {    $('#id_list').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#id_list').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  $("#id_upload").click(function(){
+	  window.open("${ctx}/aws/upload");
+  });
+  
+  
+  
+  
+	  
+ 
+  
+  
+});
+</script>
+<body>
+桶名称：  <input type="text" name="name" id="name"  /><br/><br/><br/>
+
+<input type="button" value="创建存储桶" id="id_create"><br><br>
+
+<input type="button" value="存储桶列表" id="id_list"><br><br>
+
+<input type="button" value="上传" id="id_upload"><br><br>
+
+ 
+
+<div id="c"></div>
+
+</body>
+</html>

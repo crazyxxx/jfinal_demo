@@ -1,0 +1,39 @@
+<html>
+<script src="http://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  
+  
+  $("#id_send").click(function(){
+	  var s_name=$("#queue_name").val();
+	 
+	 
+	  $.ajax({
+		  url: "${ctx}/blog/getReceive",
+		  data: {
+			  queue_name: s_name
+		  },
+		  beforeSend: function(result) {    $('#id_send').prop('disabled',true); },
+		  error: function(result) {   $("#c").html(result); },
+          complete: function(result) {  $('#id_send').prop('disabled',false); },
+		  success: function( result ) {
+			  $("#c").html(result);
+		  }
+		});
+	  
+	  
+  });
+  
+  
+});
+</script>
+<body>
+队列名称：  <input type="text" name="queue_name" id="queue_name"  /><br/><br/><br/>
+ 
+<input type="button" value="获取信息" id="id_send"><br><br>
+ 
+
+<div id="c"></div>
+
+</body>
+</html>
